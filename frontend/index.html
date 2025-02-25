@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Project - Jönköping Stores</title>
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Jönköping Stores</div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#stores-section">Stores</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Login/Signup</a></li>
+        </ul>
+        <div class="burger" onclick="toggleMenu()">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+    </nav>
+
+    <h1>Welcome to Jönköping Stores</h1>
+
+    <!-- Stores Section -->
+    <section id="stores-section">
+        <h2>Our Stores</h2>
+        <ol id="store-list">
+            <li>Loading stores...</li>
+        </ol>
+    </section>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+
+services:
+  database:
+    build: ./database
+    container_name: stores_database
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: storesdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: stores_backend
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://admin:admin@database:5432/storesdb
+
+  frontend:
+    build: ./frontend
+    container_name: stores_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "8084:80"
+
+volumes:
+  db_data:
