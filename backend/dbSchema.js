@@ -109,4 +109,25 @@ async function deleteStore(id) {
         console.error('Error deleting store:', err);
     }
 }
-module.exports = {dropStoresTable, connectDB, createStoresTable, insertStoresData, getStores, clearStoresTable, add, deleteStore };
+
+// Fix the function
+async function edite(id, name, url, district, location) {
+  try {
+      const result = await client.query(
+          "UPDATE stores SET name = $2, url = $3, district = $4, location = $5 WHERE store_id = $1 RETURNING *", 
+          [id, name, url, district, location]
+      );
+
+      if (result.rows.length > 0) {
+          console.log("Store updated:", result.rows[0]);
+          return result.rows[0]; // Return the updated store
+      } else {
+          console.error("No store found with the given ID.");
+          return null;
+      }
+  } catch (err) {
+      console.error("Error updating store:", err);
+      throw err; // Throw error so it can be caught in the route
+  }
+}
+module.exports = {dropStoresTable, connectDB, createStoresTable, insertStoresData, getStores, clearStoresTable, add, deleteStore, edite };

@@ -44,7 +44,7 @@ app.get("/", (req, res) => {
     }
   }
   // Call the function to insert data on server startup
-insertStoresFromFile();
+//insertStoresFromFile();
 
 
 app.get('/stores', async (req, res) => {
@@ -113,6 +113,17 @@ app.post("/delete-stores", async (req, res) => {
   }
 });
 
+
+app.post("/update-stores", async (req, res) => {
+  const { id, name, url, district, location } = req.body;
+  try {
+    await db.edite(id, name, url, district, location);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error updating store:", error);
+    res.status(500).json({ success: false, message: "Database error" });
+  }
+})
 
 
 

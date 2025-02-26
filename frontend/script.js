@@ -19,7 +19,60 @@ fetch("http://localhost:3000/check-login", {
                         if (isLoggedIn) {
                             const editButton = document.createElement("button");
                             editButton.textContent = "Edit";
-
+                            editButton.addEventListener("click", () => {
+                                // Create the form
+                                const form = document.createElement("form");
+                                form.classList.add("edit-form");
+                            
+                                // Create input fields with existing values
+                                form.innerHTML = `
+                                    <input type="text" name="name" value="${store.name}" placeholder="Name" required>
+                                    <input type="text" name="url" value="${store.url}" placeholder="URL">
+                                    <input type="text" name="district" value="${store.district}" placeholder="District">
+                                    <input type="text" name="location" value="${store.location || ''}" placeholder="Location">
+                                    <button type="submit">Save</button>
+                                    <button type="button" class="cancel-btn">Cancel</button>
+                                `;
+                            
+                                // Append form under the store item
+                                li.appendChild(form);
+                            
+                                // Handle form submission
+                                form.addEventListener("submit", (e) => {
+                                    e.preventDefault();
+                                    const updatedName = form.querySelector('[name="name"]').value;
+                                    const updatedUrl = form.querySelector('[name="url"]').value;
+                                    const updatedDistrict = form.querySelector('[name="district"]').value;
+                                    const updatedLocation = form.querySelector('[name="location"]').value;
+                            
+                                    fetch("http://localhost:3000/update-stores", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        credentials: "include",
+                                        body: JSON.stringify({
+                                            id: store.store_id,
+                                            name: updatedName,
+                                            url: updatedUrl,
+                                            district: updatedDistrict,
+                                            location: updatedLocation || null,
+                                        }),
+                                    })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                alert("Store updated successfully");
+                                                location.reload();
+                                            } else {
+                                                alert("Failed to update store");
+                                            }
+                                        });
+                                });
+                            
+                                // Handle cancel button
+                                form.querySelector(".cancel-btn").addEventListener("click", () => {
+                                    form.remove();
+                                });
+                            });
                             const deleteButton = document.createElement("button");
                             deleteButton.textContent = "Delete";
                             deleteButton.addEventListener("click", () => {
