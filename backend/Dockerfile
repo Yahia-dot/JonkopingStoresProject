@@ -6,6 +6,7 @@ WORKDIR /app
 # Copy package files and install dependencies
 COPY package.json package-lock.json* ./
 RUN npm install
+RUN npm install express-session
 
 # Copy the rest of the backend code
 COPY . .

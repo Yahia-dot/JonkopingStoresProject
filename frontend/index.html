@@ -16,8 +16,22 @@
             <li><a href="#">Home</a></li>
             <li><a href="#stores-section">Stores</a></li>
             <li><a href="#">Contact</a></li>
-            <li><a href="#">Login/Signup</a></li>
         </ul>
+        <form class="login-form" id="login-form">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div id="user-info" style="display: none;">
+            Welcome, <span id="username-display">Admin</span>! 
+            <button id="logout">Logout</button>
+        </div>
+        
+
+
+
+
+        
         <div class="burger" onclick="toggleMenu()">
             <div class="line"></div>
             <div class="line"></div>
@@ -26,13 +40,23 @@
     </nav>
 
     <h1>Welcome to Jönköping Stores</h1>
-
+    <form id="store-form" style="display: none;"> 
+        <h2>Add a Store</h2>
+        <input type="text" id="name" placeholder="Store Name" required>
+        <input type="text" id="url" placeholder="Store url" required>
+        <input type="text" id="district" placeholder="Store District">
+        <input type="text" id="location" placeholder="Store location">
+        <button type="submit">Add Store</button>
+    </form>
     <!-- Stores Section -->
     <section id="stores-section">
         <h2>Our Stores</h2>
         <ol id="store-list">
             <li>Loading stores...</li>
+            <button id="edite-store">edite</button>
+            <button id="delete-store">delete</button>
         </ol>
+       
     </section>
 
 </body>
