@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Project - Jönköping Stores</title>
+    <title>Jönköping Stores</title>
     <link rel="stylesheet" href="./style.css">
     <script defer src="script.js"></script>
 </head>
 <body>
-
     <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">Jönköping Stores</div>
         <ul class="nav-links">
-            <li><a href="#">Home</a></li>
+            <li><a href="#home-section">Home</a></li>
             <li><a href="#stores-section">Stores</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#contact-section">Contact</a></li>
         </ul>
         <form class="login-form" id="login-form">
             <input type="text" id="username" placeholder="Username" required>
@@ -23,15 +22,9 @@
             <button type="submit">Login</button>
         </form>
         <div id="user-info" style="display: none;">
-            Welcome, <span id="username-display">Admin</span>! 
+            Welcome, <span id="username-display">Admin</span>!
             <button id="logout">Logout</button>
         </div>
-        
-
-
-
-
-        
         <div class="burger" onclick="toggleMenu()">
             <div class="line"></div>
             <div class="line"></div>
@@ -39,25 +32,39 @@
         </div>
     </nav>
 
-    <h1>Welcome to Jönköping Stores</h1>
-    <form id="store-form" style="display: none;"> 
-        <h2>Add a Store</h2>
-        <input type="text" id="name" placeholder="Store Name" required>
-        <input type="text" id="url" placeholder="Store url" required>
-        <input type="text" id="district" placeholder="Store District">
-        <input type="text" id="location" placeholder="Store location">
-        <button type="submit">Add Store</button>
-    </form>
+    <!-- Home Section -->
+    <section id="home-section" class="hero">
+        <h1>Welcome to Jönköping Stores</h1>
+        <p>Explore a curated selection of the best stores in Jönköping! Find amazing deals and discover new favorites.</p>
+        <a href="#stores-section" class="cta-button">Explore Stores</a>
+    </section>
+
     <!-- Stores Section -->
     <section id="stores-section">
         <h2>Our Stores</h2>
-        <ol id="store-list">
-            <li>Loading stores...</li>
-            <button id="edite-store">edite</button>
-            <button id="delete-store">delete</button>
-        </ol>
-       
+        <!-- Add Store Form -->
+        <form id="store-form" style="display: none;">
+            <h3>Add a New Store</h3>
+            <input type="text" id="name" placeholder="Store Name" required>
+            <input type="text" id="url" placeholder="Store URL">
+            <input type="text" id="district" placeholder="District" required>
+            <input type="text" id="location" placeholder="Location">
+            <button type="submit">Add Store</button>
+        </form>
+        
+        <!-- Store List -->
+        <div class="store-list" id="store-list">
+            <div class="loading">Loading stores...</div>
+        </div>
     </section>
 
+    <!-- Contact Section / Footer -->
+    <footer id="contact-section">
+        <h2>Contact Us</h2>
+        <p>Email: support@jonkopingstores.com</p>
+        <p>Phone: +46 123 456 789</p>
+        <p>Address: Jönköping, Sweden</p>
+        <p>&copy; 2025 Jönköping Stores. All rights reserved.</p>
+    </footer>
 </body>
 </html>

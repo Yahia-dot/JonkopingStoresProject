@@ -12,7 +12,26 @@ fetch("http://localhost:3000/check-login", {
                 list.innerHTML = ""; // Clear default loading text
 
                 if (Array.isArray(data) && data.length > 0) {
+                    // Sort stores alphabetically
+                    data.sort((a, b) => a.name.localeCompare(b.name));
+
+                    let currentLetter = "";
+
                     data.forEach(store => {
+                        const firstLetter = store.name.charAt(0).toUpperCase();
+                        
+                        // Add a new letter heading if it's a different starting letter
+                        if (firstLetter !== currentLetter) {
+                            currentLetter = firstLetter;
+                            const letterHeader = document.createElement("h3");
+                            letterHeader.textContent = currentLetter;
+                            list.appendChild(letterHeader);
+
+                            const separator = document.createElement("hr");
+                            separator.style.marginBottom = "10px";
+                            list.appendChild(separator);
+                        }
+
                         const li = document.createElement("li");
                         li.innerHTML = `<a href="https://${store.url}" target="_blank">${store.name}</a> - ${store.district} - location ${store.location}`;
 
@@ -20,11 +39,9 @@ fetch("http://localhost:3000/check-login", {
                             const editButton = document.createElement("button");
                             editButton.textContent = "Edit";
                             editButton.addEventListener("click", () => {
-                                // Create the form
                                 const form = document.createElement("form");
                                 form.classList.add("edit-form");
-                            
-                                // Create input fields with existing values
+
                                 form.innerHTML = `
                                     <input type="text" name="name" value="${store.name}" placeholder="Name" required>
                                     <input type="text" name="url" value="${store.url}" placeholder="URL">
@@ -33,18 +50,16 @@ fetch("http://localhost:3000/check-login", {
                                     <button type="submit">Save</button>
                                     <button type="button" class="cancel-btn">Cancel</button>
                                 `;
-                            
-                                // Append form under the store item
+
                                 li.appendChild(form);
-                            
-                                // Handle form submission
+
                                 form.addEventListener("submit", (e) => {
                                     e.preventDefault();
                                     const updatedName = form.querySelector('[name="name"]').value;
                                     const updatedUrl = form.querySelector('[name="url"]').value;
                                     const updatedDistrict = form.querySelector('[name="district"]').value;
                                     const updatedLocation = form.querySelector('[name="location"]').value;
-                            
+
                                     fetch("http://localhost:3000/update-stores", {
                                         method: "POST",
                                         headers: { "Content-Type": "application/json" },
@@ -67,12 +82,12 @@ fetch("http://localhost:3000/check-login", {
                                             }
                                         });
                                 });
-                            
-                                // Handle cancel button
+
                                 form.querySelector(".cancel-btn").addEventListener("click", () => {
                                     form.remove();
                                 });
                             });
+
                             const deleteButton = document.createElement("button");
                             deleteButton.textContent = "Delete";
                             deleteButton.addEventListener("click", () => {
@@ -105,6 +120,7 @@ fetch("http://localhost:3000/check-login", {
             })
             .catch(error => console.error("Error fetching data:", error));
     });
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -187,16 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     });
 });
-
-
-
-
-
-
-
-
-
-
 
 
 

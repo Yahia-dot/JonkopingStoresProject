@@ -24,7 +24,7 @@ db.connectDB();
 
 
 app.use(cors({ 
-  origin: "http://localhost:8084", 
+  origin: "http://localhost:8085", 
    credentials: true 
   }));
 
