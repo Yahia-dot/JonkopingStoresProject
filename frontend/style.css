@@ -152,6 +152,39 @@ body {
     padding-bottom: 0.5rem;
 }
 
+/* Sorting Options */
+.sort-options {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.sort-options label {
+    font-size: 1.2rem;
+    color: #333;
+    margin-right: 0.5rem;
+}
+
+.sort-options select {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sort-options select:focus {
+    outline: none;
+    border-color: #ff6347;
+    box-shadow: 0 0 5px rgba(255, 99, 71, 0.5);
+}
+
+.sort-options select:hover {
+    border-color: #ff6347;
+}
+
 /* Add Store Form Styles */
 #store-form {
     background-color: #fff;

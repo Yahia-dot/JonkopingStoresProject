@@ -37,6 +37,14 @@
     <!-- Stores Section -->
     <section id="stores-section">
         <h2>Our Stores</h2>
+        <!-- Add Sort Options -->        
+        <div class="sort-options">
+            <label for="sort-order">Sort by:</label>
+            <select id="sort-order">
+                <option value="asc">A to Z</option>
+                <option value="desc">Z to A</option>
+            </select>
+        </div>
         <!-- Add Store Form -->
         <form id="store-form" style="display: none;">
             <h3>Add a New Store</h3>
@@ -46,7 +54,7 @@
             <input type="text" id="location" placeholder="Location">
             <button type="submit">Add Store</button>
         </form>
-        
+
         <!-- Store List -->
         <div class="store-list" id="store-list">
             <div class="loading">Loading stores...</div>

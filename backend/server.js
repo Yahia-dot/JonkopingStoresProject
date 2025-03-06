@@ -28,7 +28,7 @@ db.connectDB();
 //db.dropStoresTable();
 
 app.use(cors({ 
-    origin: "http://localhost:8085", 
+    origin: "http://localhost:8086", 
     credentials: true 
 }));
 
