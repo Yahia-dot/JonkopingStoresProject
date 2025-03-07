@@ -1,129 +1,146 @@
-fetch("http://localhost:3000/check-login", {
-    credentials: "include"
-})
-    .then(response => response.json())
-    .then(data => {
-        const isLoggedIn = data.loggedIn;
+document.addEventListener("DOMContentLoaded", () => {
+    const sortOrderSelect = document.getElementById("sort-order");
 
-        fetch("http://localhost:3000/stores")
+    // Function to fetch and display stores
+    const fetchAndDisplayStores = (sortOrder = "asc") => {
+        fetch("http://localhost:3000/check-login", {
+            credentials: "include"
+        })
             .then(response => response.json())
             .then(data => {
-                const list = document.getElementById("store-list");
-                list.innerHTML = ""; // Clear default loading text
+                const isLoggedIn = data.loggedIn;
+                
+                fetch("http://localhost:3000/stores")
+                    .then(response => response.json())
+                    .then(data => {
+                        const list = document.getElementById("store-list");
+                        list.innerHTML = ""; // Clear default loading text
 
-                if (Array.isArray(data) && data.length > 0) {
-                    // Sort stores alphabetically
-                    data.sort((a, b) => a.name.localeCompare(b.name));
+                        if (Array.isArray(data) && data.length > 0) {
+                            // Sort stores based on the selected order
+                            if (sortOrder === "asc") {
+                                data.sort((a, b) => a.name.localeCompare(b.name));
+                            } else {
+                                data.sort((a, b) => b.name.localeCompare(a.name));
+                            }
 
-                    let currentLetter = "";
+                            let currentLetter = "";
 
-                    data.forEach(store => {
-                        const firstLetter = store.name.charAt(0).toUpperCase();
-                        
-                        // Add a new letter heading if it's a different starting letter
-                        if (firstLetter !== currentLetter) {
-                            currentLetter = firstLetter;
-                            const letterHeader = document.createElement("h3");
-                            letterHeader.textContent = currentLetter;
-                            list.appendChild(letterHeader);
+                            data.forEach(store => {
+                                const firstLetter = store.name.charAt(0).toUpperCase();
+                                
+                                // Add a new letter heading if it's a different starting letter
+                                if (firstLetter !== currentLetter) {
+                                    currentLetter = firstLetter;
+                                    const letterHeader = document.createElement("h3");
+                                    letterHeader.textContent = currentLetter;
+                                    list.appendChild(letterHeader);
 
-                            const separator = document.createElement("hr");
-                            separator.style.marginBottom = "10px";
-                            list.appendChild(separator);
-                        }
+                                    const separator = document.createElement("hr");
+                                    separator.style.marginBottom = "10px";
+                                    list.appendChild(separator);
+                                }
 
-                        const li = document.createElement("li");
-                        li.innerHTML = `<a href="https://${store.url}" target="_blank">${store.name}</a> - ${store.district} - location ${store.location}`;
+                                const li = document.createElement("li");
+                                li.innerHTML = `<a href="https://${store.url}" target="_blank">${store.name}</a> - ${store.district} - location ${store.location}`;
 
-                        if (isLoggedIn) {
-                            const editButton = document.createElement("button");
-                            editButton.textContent = "Edit";
-                            editButton.addEventListener("click", () => {
-                                const form = document.createElement("form");
-                                form.classList.add("edit-form");
+                                if (isLoggedIn) {
+                                    const editButton = document.createElement("button");
+                                    editButton.textContent = "Edit";
+                                    editButton.addEventListener("click", () => {
+                                        const form = document.createElement("form");
+                                        form.classList.add("edit-form");
 
-                                form.innerHTML = `
-                                    <input type="text" name="name" value="${store.name}" placeholder="Name" required>
-                                    <input type="text" name="url" value="${store.url}" placeholder="URL">
-                                    <input type="text" name="district" value="${store.district}" placeholder="District">
-                                    <input type="text" name="location" value="${store.location || ''}" placeholder="Location">
-                                    <button type="submit">Save</button>
-                                    <button type="button" class="cancel-btn">Cancel</button>
-                                `;
+                                        form.innerHTML = `
+                                            <input type="text" name="name" value="${store.name}" placeholder="Name" required>
+                                            <input type="text" name="url" value="${store.url}" placeholder="URL">
+                                            <input type="text" name="district" value="${store.district}" placeholder="District">
+                                            <input type="text" name="location" value="${store.location || ''}" placeholder="Location">
+                                            <button type="submit">Save</button>
+                                            <button type="button" class="cancel-btn">Cancel</button>
+                                        `;
 
-                                li.appendChild(form);
+                                        li.appendChild(form);
 
-                                form.addEventListener("submit", (e) => {
-                                    e.preventDefault();
-                                    const updatedName = form.querySelector('[name="name"]').value;
-                                    const updatedUrl = form.querySelector('[name="url"]').value;
-                                    const updatedDistrict = form.querySelector('[name="district"]').value;
-                                    const updatedLocation = form.querySelector('[name="location"]').value;
+                                        form.addEventListener("submit", (e) => {
+                                            e.preventDefault();
+                                            const updatedName = form.querySelector('[name="name"]').value;
+                                            const updatedUrl = form.querySelector('[name="url"]').value;
+                                            const updatedDistrict = form.querySelector('[name="district"]').value;
+                                            const updatedLocation = form.querySelector('[name="location"]').value;
 
-                                    fetch("http://localhost:3000/update-stores", {
-                                        method: "POST",
-                                        headers: { "Content-Type": "application/json" },
-                                        credentials: "include",
-                                        body: JSON.stringify({
-                                            id: store.store_id,
-                                            name: updatedName,
-                                            url: updatedUrl,
-                                            district: updatedDistrict,
-                                            location: updatedLocation || null,
-                                        }),
-                                    })
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            if (data.success) {
-                                                alert("Store updated successfully");
-                                                location.reload();
-                                            } else {
-                                                alert("Failed to update store");
-                                            }
+                                            fetch("http://localhost:3000/update-stores", {
+                                                method: "POST",
+                                                headers: { "Content-Type": "application/json" },
+                                                credentials: "include",
+                                                body: JSON.stringify({
+                                                    id: store.store_id,
+                                                    name: updatedName,
+                                                    url: updatedUrl,
+                                                    district: updatedDistrict,
+                                                    location: updatedLocation || null,
+                                                }),
+                                            })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    if (data.success) {
+                                                        alert("Store updated successfully");
+                                                        location.reload();
+                                                    } else {
+                                                        alert("Failed to update store");
+                                                    }
+                                                });
                                         });
-                                });
 
-                                form.querySelector(".cancel-btn").addEventListener("click", () => {
-                                    form.remove();
-                                });
-                            });
-
-                            const deleteButton = document.createElement("button");
-                            deleteButton.textContent = "Delete";
-                            deleteButton.addEventListener("click", () => {
-                                fetch("http://localhost:3000/delete-stores", {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    credentials: "include",
-                                    body: JSON.stringify({ id: store.store_id }),
-                                })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            alert("Store deleted successfully");
-                                            location.reload();
-                                        } else {
-                                            alert("Failed to delete store");
-                                        }
+                                        form.querySelector(".cancel-btn").addEventListener("click", () => {
+                                            form.remove();
+                                        });
                                     });
+
+                                    const deleteButton = document.createElement("button");
+                                    deleteButton.textContent = "Delete";
+                                    deleteButton.addEventListener("click", () => {
+                                        fetch("http://localhost:3000/delete-stores", {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            credentials: "include",
+                                            body: JSON.stringify({ id: store.store_id }),
+                                        })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    alert("Store deleted successfully");
+                                                    location.reload();
+                                                } else {
+                                                    alert("Failed to delete store");
+                                                }
+                                            });
+                                    });
+
+                                    li.appendChild(editButton);
+                                    li.appendChild(deleteButton);
+                                }
+
+                                list.appendChild(li);
                             });
-
-                            li.appendChild(editButton);
-                            li.appendChild(deleteButton);
+                        } else {
+                            list.innerHTML = "No stores available.";
                         }
+                    })
+                    .catch(error => console.error("Error fetching data:", error));
+            });
+    };
 
-                        list.appendChild(li);
-                    });
-                } else {
-                    list.innerHTML = "No stores available.";
-                }
-            })
-            .catch(error => console.error("Error fetching data:", error));
+    // Initial fetch and display
+    fetchAndDisplayStores();
+
+    // Add event listener to the sort order select
+    sortOrderSelect.addEventListener("change", (e) => {
+        const sortOrder = e.target.value;
+        fetchAndDisplayStores(sortOrder);
     });
 
-
-
-document.addEventListener("DOMContentLoaded", () => {
+    // Login functionality
     fetch("http://localhost:3000/check-login", {
         credentials: "include"
     })
@@ -135,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("username-display").textContent = data.username || "Admin";
             }
         });
+
     document.getElementById("login-form").addEventListener("submit", (e) => {
         e.preventDefault();
         const username = document.getElementById("username").value;
@@ -162,10 +180,8 @@ document.addEventListener("DOMContentLoaded", () => {
             credentials: "include"
         }).then(() => location.reload());
     });
-});
 
-
-document.addEventListener("DOMContentLoaded", () => {
+    // Add store form functionality
     fetch("http://localhost:3000/check-login", {
         credentials: "include"
     })
@@ -175,6 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("store-form").style.display = "block";
             }
         });
+
     const form = document.getElementById("store-form");
 
     form.addEventListener("submit", (e) => {
@@ -203,6 +220,3 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     });
 });
-
-
-
