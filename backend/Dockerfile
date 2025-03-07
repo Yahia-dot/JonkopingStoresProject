@@ -7,7 +7,8 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install
 RUN npm install express-session
-
+RUN npm install bcrypt
+Run npm install cookie-parser
 # Copy the rest of the backend code
 COPY . .
 
