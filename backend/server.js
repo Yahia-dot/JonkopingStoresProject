@@ -3,23 +3,22 @@ const cors = require("cors");
 const path = require("path");
 const db = require("./dbSchema.js");
 const fs = require("fs");
-const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const crypto = require("crypto");
-
+const SECRET = 'mySecretCookieToken'; 
 const PORT = 3000;
 const app = express();
-
+const sessions = {};
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(SECRET));
 
-const sessionSecret = crypto.randomBytes(32).toString("hex");
-app.use(session({
+//const sessionSecret = crypto.randomBytes(32).toString("hex");
+/*app.use(session({
     secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using HTTPS
-}));
+}));*/
 
 db.connectDB();
 //db.createStoresTable();
@@ -65,8 +64,9 @@ const VALID_PASSWORD = "ahmad";
 app.post("/login", (req, res) => {
     const { username, password } = req.body;
     if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-        req.session.user = username;
-        res.cookie("auth", "true", { httpOnly: true });
+        const token = crypto.randomBytes(64).toString('hex');
+        sessions[token] = { username };
+        res.cookie('authToken', token, { signed: true, httpOnly: true });
         res.json({ success: true });
     } else {
         res.json({ success: false });
@@ -74,16 +74,21 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/check-login", (req, res) => {
-    if (req.session.user) {
-        res.json({ loggedIn: true, username: req.session.user });
+    const token = req.signedCookies.authToken; 
+    if (token && sessions[token]) {
+        res.json({ loggedIn: true, username: sessions[token].username });
     } else {
         res.json({ loggedIn: false });
     }
 });
 
-app.post("/logout", (req, res) => {
-    res.clearCookie("auth");
-    req.session.destroy(() => res.json({ success: true }));
+app.get('/logout', (req, res) => {  // Ensure method matches frontend
+    const token = req.signedCookies.authToken;
+    if (token) {
+        delete sessions[token];
+    }
+    res.clearCookie('authToken');
+    res.json({ success: true });  // Send a response to avoid hanging requests
 });
 
 app.post("/add-stores", async (req, res) => {

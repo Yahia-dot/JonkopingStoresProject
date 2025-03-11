@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("logout").addEventListener("click", () => {
         fetch("http://localhost:3000/logout", {
-            method: "POST",
+            method: "GET",  // Ensure this matches backend
             credentials: "include"
         }).then(() => location.reload());
     });
